@@ -1,0 +1,26 @@
+.list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+}
+
+.item {
+    text-align: center;
+}
+
+.head {
+    padding: 8px 10px;
+    font-weight: 600;
+}
+
+.sub {
+    color: var(--muted);
+    font-size: 12px;
+    padding-bottom: 10px;
+}
+
+.avatar {
+    aspect-ratio: 2/3;
+    background: #0f1219;
+    border-bottom: 1px solid #262b36;
+}

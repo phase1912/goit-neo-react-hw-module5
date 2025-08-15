@@ -1,0 +1,11 @@
+.main {
+    min-height: 100%;
+}
+
+.content {
+    padding-top: 68px;
+}
+
+.suspense {
+    margin-top: 20px;
+}

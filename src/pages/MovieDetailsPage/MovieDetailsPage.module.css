@@ -1,0 +1,47 @@
+.header {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 22px;
+    margin-bottom: 20px;
+}
+
+.poster {
+    width: 100%;
+    aspect-ratio: 2/3;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #262b36;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: 900;
+    margin: 0 0 6px;
+}
+
+.sub {
+    color: var(--muted);
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.section {
+    margin-top: 28px;
+}
+
+.links {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.back {
+    margin-bottom: 16px;
+}
+
+@media (max-width: 720px) {
+    .header {
+        grid-template-columns: 1fr;
+    }
+}
