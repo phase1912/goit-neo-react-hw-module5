@@ -10,31 +10,29 @@ export default function HomePage() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        let mounted = false
+        const controller = new AbortController();
 
         async function fetchTrends() {
             try {
                 setLoading(true);
                 setError('');
 
-                const data = (await getTrending()) ?? [];
+                const data = (await getTrending(controller.signal)) ?? [];
 
-                if (!mounted) setTrends(data);
+                setTrends(data);
             } catch (error) {
-                console.error(error);
-                if (!mounted) setError(error);
-            } finally {
-                if (!mounted) {
-                    setLoading(false);
+                if (e.name !== 'CanceledError' && e.name !== 'AbortError') {
+                    setError('Failed to load trending movies.')
                 }
-
+            } finally { 
+                setLoading(false);
             }
         }
 
         fetchTrends();
 
         return () => {
-            mounted = true;
+            controller.abort();
         };
     }, []);
 

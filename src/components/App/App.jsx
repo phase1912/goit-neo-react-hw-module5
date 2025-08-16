@@ -9,6 +9,8 @@ const App = () => {
     const MoviesPage = lazy(() => import('../../pages/MoviesPage/MoviesPage.jsx'))
     const MovieDetailsPage = lazy(() => import('../../pages/MovieDetailsPage/MovieDetailsPage.jsx'))
     const NotFoundPage = lazy(() => import('../../pages/NotFoundPage/NotFoundPage.jsx'))
+    const MovieCast = lazy(() => import('../MovieCast/MovieCast.jsx'))
+    const MovieReviews = lazy(() => import('../MovieReviews/MovieReviews.jsx'))
 
     return (
         <div className={styles.main}>
@@ -26,12 +28,12 @@ const App = () => {
                         <Route path="/movies/:movieId" element={<MovieDetailsPage/>}>
                             <Route path="cast" element={
                                 <Suspense fallback={<Loader/>}>
-                                    {React.createElement(lazy(() => import('../MovieCast/MovieCast.jsx')))}
+                                    <MovieCast/>
                                 </Suspense>
                             }/>
                             <Route path="reviews" element={
                                 <Suspense fallback={<Loader/>}>
-                                    {React.createElement(lazy(() => import('../MovieReviews/MovieReviews.jsx')))}
+                                    <MovieReviews/>
                                 </Suspense>
                             }/>
                         </Route>

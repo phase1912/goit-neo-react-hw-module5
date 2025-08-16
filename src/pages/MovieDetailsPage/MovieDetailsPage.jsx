@@ -14,34 +14,30 @@ const MovieDetailsPage = () => {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        let mounted = false;
+        const controller = new AbortController();
 
         async function fetchDetails() {
             try {
                 setLoading(true);
                 setError('');
 
-                const details = await getMovieDetails(movieId);
+                const details = await getMovieDetails(movieId, controller.signal);
 
-                if (!mounted) {
-                    setMovie(details);
-                }
+                setMovie(details);
+                
             } catch (error) {
-                console.log(error);
-                if (!mounted) {
-                    setError(error);
+                if (error.name !== 'CanceledError' && error.name !== 'AbortError') {
+                    setError('Failed to load movie details.')
                 }
             } finally {
-                if (!mounted) {
-                    setLoading(false);
-                }
+                setLoading(false);
             }
         }
 
         fetchDetails();
 
         return () => {
-            mounted = true;
+           controller.abort();
         }
     }, [movieId]);
 

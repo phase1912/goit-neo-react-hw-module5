@@ -18,26 +18,30 @@ const MoviesPage = () => {
     }, [query]);
 
     useEffect(() => {
-        let mounted = false;
+        const controller = new AbortController();
+
+        if (!query.trim()) {
+            setMovies([]);
+            return;
+        }
+        
         const getMovies = async () => {
-            if (!query.trim()) {
-                setMovies([]);
-                return;
-            }
             try {
                 setLoading(true);
-                setError('')
-                const data = await searchMovies(query);
-                if (!mounted) setMovies(data);
+                setError('');
+                const data = await searchMovies(query, controller.signal);
+                setMovies(data);
             } catch (e) {
-                if (!mounted) setError('Search failed.');
+                if (e.name !== 'CanceledError' && e.name !== 'AbortError') {
+                    setError('Search failed.');
+                }
             } finally {
-                if (!mounted) setLoading(false);
+                setLoading(false);
             }
         }
         getMovies()
         return () => {
-            mounted = true
+           controller.abort();
         }
     }, [query])
 

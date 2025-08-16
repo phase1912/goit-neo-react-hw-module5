@@ -5,30 +5,34 @@ import styles from "./MovieCast.module.css";
 import Loader from "../Loader/Loader.jsx";
 
 const MovieCast = () => {
-    const { movieId } = useParams()
-    const [cast, setCast] = useState([])
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState('')
+    const { movieId } = useParams();
+    const [cast, setCast] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     useEffect(() => {
-        let mounted = false
+        const controller = new AbortController();
+        
         const getCast = async () => {
             try {
                 setLoading(true);
-                setError('')
-                const data = await getMovieCredits(movieId)
-                if (!mounted) setCast(data)
+                setError('');
+                const data = await getMovieCredits(movieId, controller.signal);
+                setCast(data);
             } catch (e) {
-                if (!mounted) setError('Failed to load cast.')
+                if (e.name !== 'CanceledError' && e.name !== 'AbortError') {
+                    setError('Failed to load cast.')
+                }
             } finally {
-                if (!mounted) setLoading(false)
+                setLoading(false);
             }
         }
-        getCast()
+        getCast();
+        
         return () => {
-            mounted = true
+            controller.abort();
         }
-    }, [movieId])
+    }, [movieId]);
 
     if (loading) return <Loader/>
     if (error) return <div className="error">{error}</div>

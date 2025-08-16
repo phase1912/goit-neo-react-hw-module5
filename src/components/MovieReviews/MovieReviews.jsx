@@ -5,30 +5,36 @@ import styles from "./MovieReviews.module.css";
 import Loader from "../Loader/Loader.jsx";
 
 const MovieReviews = () => {
-    const { movieId } = useParams()
-    const [reviews, setReviews] = useState([])
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState('')
+    const { movieId } = useParams();
+    const [reviews, setReviews] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     useEffect(() => {
-        let mounted = false
+        const controller = new AbortController();
+        
         const getReviews = async () => {
             try {
                 setLoading(true);
-                setError('')
-                const data = await getMovieReviews(movieId)
-                if (!mounted) setReviews(data)
+                setError('');
+                
+                const data = await getMovieReviews(movieId, controller.signal);
+                
+                setReviews(data);
             } catch (e) {
-                if (!mounted) setError('Failed to load reviews.')
+                if (e.name !== 'CanceledError' && e.name !== 'AbortError') {
+                    setError('Failed to load reviews.')
+                }
             } finally {
-                if (!mounted) setLoading(false)
+                setLoading(false);
             }
         }
-        getReviews()
+        
+        getReviews();
         return () => {
-            mounted = true
+            controller.abort();
         }
-    }, [movieId])
+    }, [movieId]);
 
     if (loading) return <Loader/>
     if (error) return <div className="error">{error}</div>
